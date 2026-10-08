@@ -1,6 +1,6 @@
 # Pocket DBT
 
-Pocket DBT is a private, offline, DBT-informed skills cheat sheet built with React Native and Expo.
+Pocket DBT is an offline-first, DBT-informed skills cheat sheet built with React Native and Expo.
 
 ## Local development
 
