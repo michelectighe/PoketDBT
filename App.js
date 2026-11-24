@@ -33,10 +33,10 @@ const TOOLS = {
     icon: '◇',
     tag: 'START HERE',
     steps: [
-      ['(S)top', 'Freeze for a moment. Do not act on the first urge.'],
-      ['(T)ake a step back', 'Move away if you can. Take one slow breath.'],
-      ['(O)bserve', 'Notice your thoughts, feelings, body, and what is happening around you.'],
-      ['(P)roceed mindfully', 'Ask: “What action will help, instead of making this harder?”'],
+      ['Stop', 'Freeze for a moment. Do not act on the first urge.'],
+      ['Take a step back', 'Move away if you can. Take one slow breath.'],
+      ['Observe', 'Notice your thoughts, feelings, body, and what is happening around you.'],
+      ['Proceed mindfully', 'Ask: “What action will help, instead of making this harder?”'],
     ],
     finish: 'You do not have to solve everything right now. Your next wise step can be very small.',
   },
@@ -49,20 +49,20 @@ const TOOLS = {
     tag: 'TIPP SKILLS',
     choices: [
       {
-        title: '(T)emperature',
+        title: 'Temperature',
         text: 'Use a cool cloth or splash cool—not painfully cold—water on your face. Pause if you feel dizzy or unwell.',
       },
       {
-        title: '(I)ntense exercise',
+        title: 'Intense exercise',
         text: 'If it is safe for your body, try brisk walking, stairs, dancing, or jumping jacks for a few minutes.',
       },
       {
-        title: '(P)aced breathing',
+        title: 'Paced breathing',
         text: 'Make your exhale longer than your inhale. The guided breathing tool can lead you through it.',
         action: 'breathing',
       },
       {
-        title: '(P)aired muscle relaxation',
+        title: 'Paired muscle relaxation',
         text: 'Tense one muscle group as you breathe in. Let it soften completely as you breathe out.',
       },
     ],
@@ -232,6 +232,17 @@ function BackButton({ onPress, label = 'Back' }) {
   );
 }
 
+function ScreenLayout({ children, onBack, backLabel = 'Back' }) {
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.screenHeader}><BackButton onPress={onBack} label={backLabel} /></View>
+      <ScrollView contentContainerStyle={styles.screenContent} showsVerticalScrollIndicator={false}>
+        {children}
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
 function HomeScreen({ navigate }) {
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -277,9 +288,7 @@ function HomeScreen({ navigate }) {
 
 function ToolScreen({ tool, navigate, goHome, backLabel = 'Home' }) {
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.screenContent} showsVerticalScrollIndicator={false}>
-        <BackButton onPress={goHome} label={backLabel} />
+    <ScreenLayout onBack={goHome} backLabel={backLabel}>
         <Text style={[styles.toolTag, { color: tool.accent }]}>{tool.tag}</Text>
         <Text style={styles.pageTitle}>{tool.title}</Text><Text style={styles.pageIntro}>{tool.subtitle}</Text>
 
@@ -304,16 +313,13 @@ function ToolScreen({ tool, navigate, goHome, backLabel = 'Home' }) {
         )}
         <View style={[styles.reminderCard, { backgroundColor: `${tool.accent}12` }]}><Text style={[styles.reminderLabel, { color: tool.accent }]}>REMEMBER</Text><Text style={styles.reminderText}>{tool.finish}</Text></View>
         <Pressable onPress={() => navigate({ type: 'support' })} style={styles.smallSupport}><Text style={styles.smallSupportText}>Need urgent support?</Text></Pressable>
-      </ScrollView>
-    </SafeAreaView>
+    </ScreenLayout>
   );
 }
 
 function ModuleScreen({ module, navigate, goHome }) {
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.screenContent} showsVerticalScrollIndicator={false}>
-        <BackButton onPress={goHome} label="Modules" />
+    <ScreenLayout onBack={goHome} backLabel="Modules">
         <Text style={styles.pageTitle}>{module.title}</Text><Text style={styles.pageIntro}>{module.description}</Text>
         <View style={styles.moduleSkillList}>
           {module.skills.map((skillId, index) => {
@@ -327,8 +333,7 @@ function ModuleScreen({ module, navigate, goHome }) {
           })}
         </View>
         {module.id === 'distress' && <Pressable onPress={() => navigate({ type: 'breathingList' })} style={({ pressed }) => [styles.wideCard, pressed && styles.cardPressed]}><View style={[styles.wideIcon, { backgroundColor: '#46778A18' }]}><Text style={[styles.toolIconText, { color: '#46778A' }]}>≈</Text></View><View style={styles.cardCopy}><Text style={styles.wideTitle}>Guided breathing</Text><Text style={styles.wideText}>Use a visual breathing timer.</Text></View><Text style={styles.chevron}>›</Text></Pressable>}
-      </ScrollView>
-    </SafeAreaView>
+    </ScreenLayout>
   );
 }
 
@@ -341,8 +346,8 @@ function ChooserScreen({ navigate, goHome }) {
     { title: 'This is about another person', text: 'Ask, say no, validate, or protect self-respect.', icon: '↔', color: '#826B94', route: { type: 'module', id: 'interpersonal' } },
   ];
   return (
-    <SafeAreaView style={styles.safeArea}><ScrollView contentContainerStyle={styles.screenContent} showsVerticalScrollIndicator={false}>
-      <BackButton onPress={goHome} label="Home" /><Text style={styles.toolTag}>HELP ME CHOOSE</Text><Text style={styles.pageTitle}>What is happening right now?</Text><Text style={styles.pageIntro}>Choose the closest answer. It does not need to fit perfectly.</Text>
+    <ScreenLayout onBack={goHome} backLabel="Home">
+      <Text style={styles.toolTag}>HELP ME CHOOSE</Text><Text style={styles.pageTitle}>What is happening right now?</Text><Text style={styles.pageIntro}>Choose the closest answer. It does not need to fit perfectly.</Text>
       <View style={styles.choiceList}>{options.map((option) => (
         <Pressable key={option.title} onPress={() => navigate(option.route)} style={({ pressed }) => [styles.chooserCard, pressed && styles.cardPressed]}>
           <View style={[styles.chooserIcon, { backgroundColor: `${option.color}18` }]}><Text style={[styles.chooserIconText, { color: option.color }]}>{option.icon}</Text></View>
@@ -350,21 +355,21 @@ function ChooserScreen({ navigate, goHome }) {
         </Pressable>
       ))}</View>
       <Pressable onPress={() => navigate({ type: 'support' })} style={styles.smallSupport}><Text style={styles.smallSupportText}>I cannot stay safe</Text></Pressable>
-    </ScrollView></SafeAreaView>
+    </ScreenLayout>
   );
 }
 
 function BreathingList({ navigate, goHome }) {
   return (
-    <SafeAreaView style={styles.safeArea}><ScrollView contentContainerStyle={styles.screenContent}>
-      <BackButton onPress={goHome} label="Home" /><Text style={styles.toolTag}>GUIDED PRACTICE</Text><Text style={styles.pageTitle}>Breathe with the circle</Text><Text style={styles.pageIntro}>Keep the breath gentle. Stop if you feel dizzy, faint, or uncomfortable.</Text>
+    <ScreenLayout onBack={goHome} backLabel="Home">
+      <Text style={styles.toolTag}>GUIDED PRACTICE</Text><Text style={styles.pageTitle}>Breathe with the circle</Text><Text style={styles.pageIntro}>Keep the breath gentle. Stop if you feel dizzy, faint, or uncomfortable.</Text>
       <View style={styles.choiceList}>{EXERCISES.map((exercise) => (
         <Pressable key={exercise.id} onPress={() => navigate({ type: 'breathing', exercise })} style={({ pressed }) => [styles.exerciseCard, pressed && styles.cardPressed]}>
           <View style={[styles.wideIcon, { backgroundColor: `${exercise.accent}18` }]}><Text style={[styles.toolIconText, { color: exercise.accent }]}>{exercise.icon}</Text></View>
           <View style={styles.cardCopy}><Text style={styles.wideTitle}>{exercise.title}</Text><Text style={styles.wideText}>{exercise.subtitle}</Text><Text style={styles.duration}>{exercise.duration}</Text></View><Text style={styles.chevron}>›</Text>
         </Pressable>
       ))}</View>
-    </ScrollView></SafeAreaView>
+    </ScreenLayout>
   );
 }
 
@@ -404,44 +409,43 @@ function BreathingScreen({ exercise, goBack }) {
   const toggle = () => { if (complete) { reset(); setTimeout(() => setRunning(true), 0); } else setRunning((value) => !value); };
 
   return (
-    <SafeAreaView style={styles.safeArea}><ScrollView contentContainerStyle={styles.screenContent}>
-      <BackButton onPress={goBack} label="Breathing" /><Text style={styles.toolTag}>GUIDED PRACTICE</Text><Text style={styles.pageTitle}>{exercise.title}</Text><Text style={styles.pageIntro}>{exercise.intro}</Text>
+    <ScreenLayout onBack={goBack} backLabel="Breathing">
+      <Text style={styles.toolTag}>GUIDED PRACTICE</Text><Text style={styles.pageTitle}>{exercise.title}</Text><Text style={styles.pageIntro}>{exercise.intro}</Text>
       <View style={styles.guideCard}>
         <Text style={styles.timerText}>{formatTime(remaining)}</Text><Text style={styles.timerLabel}>REMAINING</Text>
         <View style={styles.breathingStage}><View style={[styles.breathingHalo, { backgroundColor: `${exercise.accent}12` }]} /><Animated.View style={[styles.breathingCircle, { backgroundColor: exercise.accent, transform: [{ scale }] }]}><Text style={styles.breathingCue}>{complete ? 'Complete' : running ? phase.label : remaining < exercise.sessionSeconds ? 'Paused' : 'Ready'}</Text>{running && <Text style={styles.phaseTime}>{phaseRemaining}</Text>}</Animated.View></View>
         <Pressable onPress={toggle} style={({ pressed }) => [styles.startButton, { backgroundColor: exercise.accent }, pressed && styles.cardPressed]}><Text style={styles.startButtonText}>{complete ? 'Start again' : running ? 'Pause' : remaining < exercise.sessionSeconds ? 'Continue' : 'Start'}</Text></Pressable>
         {remaining < exercise.sessionSeconds && !complete && <Pressable onPress={reset} style={styles.resetButton}><Text style={styles.resetText}>Reset</Text></Pressable>}
       </View>
-    </ScrollView></SafeAreaView>
+    </ScreenLayout>
   );
 }
 
 function SupportScreen({ goHome }) {
   const open = (url, fallback) => Linking.openURL(url).catch(() => Alert.alert('Could not open this action', fallback));
   return (
-    <SafeAreaView style={styles.safeArea}><ScrollView contentContainerStyle={styles.screenContent}>
-      <BackButton onPress={goHome} label="Home" /><View style={styles.supportIcon}><Text style={styles.supportIconText}>♡</Text></View><Text style={styles.supportTitle}>You deserve human support</Text><Text style={styles.pageIntro}>This app cannot provide crisis care. If you might hurt yourself or someone else, or cannot stay safe, reach out now.</Text>
+    <ScreenLayout onBack={goHome} backLabel="Home">
+      <View style={styles.supportIcon}><Text style={styles.supportIconText}>♡</Text></View><Text style={styles.supportTitle}>You deserve human support</Text><Text style={styles.pageIntro}>This app cannot provide crisis care. If you might hurt yourself or someone else, or cannot stay safe, reach out now.</Text>
       <View style={styles.supportCard}><Text style={styles.supportCardLabel}>CANADA · 24/7</Text><Text style={styles.supportCardTitle}>Call or text 9-8-8</Text><Text style={styles.supportCardText}>Connect with a trained suicide crisis responder in English or French.</Text>
         <Pressable onPress={() => open('tel:988', 'Call 9-8-8 from your phone.')} style={styles.callButton}><Text style={styles.callButtonText}>Call 9-8-8</Text></Pressable>
         <Pressable onPress={() => open('sms:988', 'Text 9-8-8 from your phone.')} style={styles.textButton}><Text style={styles.textButtonText}>Text 9-8-8</Text></Pressable>
       </View>
       <View style={styles.dangerCard}><Text style={styles.dangerTitle}>Immediate danger or urgent medical need?</Text><Text style={styles.dangerText}>Call emergency services now or go to the nearest emergency department.</Text><Pressable onPress={() => open('tel:911', 'Call 9-1-1 from your phone.')}><Text style={styles.dangerAction}>Call 9-1-1</Text></Pressable></View>
       <Text style={styles.locationNote}>These numbers are for Canada. If you are elsewhere, use your local emergency and crisis services.</Text>
-    </ScrollView></SafeAreaView>
+    </ScreenLayout>
   );
 }
 
 function InfoScreen({ goHome }) {
   return (
-    <SafeAreaView style={styles.safeArea}><ScrollView contentContainerStyle={styles.screenContent}>
-      <BackButton onPress={goHome} label="Home" />
+    <ScreenLayout onBack={goHome} backLabel="Home">
       <Text style={styles.toolTag}>ABOUT THE APP</Text><Text style={styles.pageTitle}>Pocket DBT</Text>
       <Text style={styles.pageIntro}>A private, offline cheat sheet for remembering and practising commonly taught DBT skills.</Text>
       <View style={styles.infoCard}><Text style={styles.infoTitle}>Important limits</Text><Text style={styles.infoText}>Pocket DBT is an educational reference and practice aid. It does not provide therapy, diagnosis, medical advice, treatment, or crisis care. It is not a substitute for professional support or a personal safety plan.</Text></View>
       <View style={styles.infoCard}><Text style={styles.infoTitle}>Privacy</Text><Text style={styles.infoText}>Pocket DBT does not require an account and does not collect, store, sell, or share personal information or health information. It contains no advertising, analytics, or tracking. Your use of skills and breathing exercises is not recorded.</Text><Text style={styles.infoText}>If you tap a call or text button, the app asks iOS to open Phone or Messages. Pocket DBT does not place the call, send the message, or receive information about it.</Text></View>
       <View style={styles.infoCard}><Text style={styles.infoTitle}>Content</Text><Text style={styles.infoText}>The app is DBT-informed but is not affiliated with or endorsed by Behavioral Tech, the Linehan Institute, or any healthcare provider. Skills may be taught differently by different clinicians; follow the guidance of your own care team.</Text></View>
       <Text style={styles.versionText}>Pocket DBT · Version 1.0.0</Text>
-    </ScrollView></SafeAreaView>
+    </ScreenLayout>
   );
 }
 
@@ -462,7 +466,7 @@ export default function App() {
 
 const styles = StyleSheet.create({
   app: { flex: 1, backgroundColor: COLORS.background }, safeArea: { flex: 1, backgroundColor: COLORS.background }, pressed: { opacity: 0.55 }, cardPressed: { opacity: 0.84, transform: [{ scale: 0.985 }] },
-  homeContent: { paddingHorizontal: 20, paddingTop: Platform.OS === 'android' ? 28 : 12, paddingBottom: 38 }, screenContent: { paddingHorizontal: 22, paddingTop: Platform.OS === 'android' ? 25 : 8, paddingBottom: 44 },
+  homeContent: { paddingHorizontal: 20, paddingTop: Platform.OS === 'android' ? 28 : 12, paddingBottom: 38 }, screenHeader: { paddingHorizontal: 22, paddingTop: Platform.OS === 'android' ? 25 : 8 }, screenContent: { paddingHorizontal: 22, paddingTop: 0, paddingBottom: 44 },
   brandRow: { flexDirection: 'row', alignItems: 'center' }, brandMark: { width: 35, height: 35, borderRadius: 18, backgroundColor: COLORS.green, alignItems: 'center', justifyContent: 'center', marginRight: 10 }, brandMarkText: { color: '#FFF', fontWeight: '800', fontSize: 17 }, brandName: { color: COLORS.green, fontSize: 18, fontWeight: '800' },
   hero: { paddingTop: 43, paddingBottom: 26 }, eyebrow: { color: '#71827C', fontSize: 11, fontWeight: '800', letterSpacing: 1.8, marginBottom: 11 }, title: { color: COLORS.ink, fontSize: 36, lineHeight: 42, fontWeight: '750', letterSpacing: -1.1 }, description: { color: COLORS.muted, fontSize: 16, lineHeight: 24, marginTop: 14 },
   primaryCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.green, borderRadius: 24, padding: 18, minHeight: 122 }, primaryIcon: { width: 54, height: 54, borderRadius: 17, backgroundColor: '#FFFFFF18', alignItems: 'center', justifyContent: 'center', marginRight: 15 }, primaryIconText: { color: '#FFF', fontSize: 25, fontWeight: '700' }, primaryLabel: { color: '#D8E4DF', fontSize: 10, fontWeight: '800', letterSpacing: 1.2, marginBottom: 5 }, primaryTitle: { color: '#FFF', fontSize: 20, fontWeight: '800', marginBottom: 4 }, primaryText: { color: '#E1EAE6', fontSize: 13, lineHeight: 18 }, chevronLight: { color: '#FFF', fontSize: 30, marginLeft: 8 }, cardCopy: { flex: 1 },
