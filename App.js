@@ -33,10 +33,10 @@ const TOOLS = {
     icon: '◇',
     tag: 'START HERE',
     steps: [
-      ['Stop', 'Freeze for a moment. Do not act on the first urge.'],
-      ['Take a step back', 'Move away if you can. Take one slow breath.'],
-      ['Observe', 'Notice your thoughts, feelings, body, and what is happening around you.'],
-      ['Proceed mindfully', 'Ask: “What action will help, instead of making this harder?”'],
+      ['(S)top', 'Freeze for a moment. Do not act on the first urge.'],
+      ['(T)ake a step back', 'Move away if you can. Take one slow breath.'],
+      ['(O)bserve', 'Notice your thoughts, feelings, body, and what is happening around you.'],
+      ['(P)roceed mindfully', 'Ask: “What action will help, instead of making this harder?”'],
     ],
     finish: 'You do not have to solve everything right now. Your next wise step can be very small.',
   },
@@ -49,20 +49,20 @@ const TOOLS = {
     tag: 'TIPP SKILLS',
     choices: [
       {
-        title: 'Cool your face',
+        title: '(T)emperature',
         text: 'Use a cool cloth or splash cool—not painfully cold—water on your face. Pause if you feel dizzy or unwell.',
       },
       {
-        title: 'Move intensely',
+        title: '(I)ntense exercise',
         text: 'If it is safe for your body, try brisk walking, stairs, dancing, or jumping jacks for a few minutes.',
       },
       {
-        title: 'Pace your breathing',
+        title: '(P)aced breathing',
         text: 'Make your exhale longer than your inhale. The guided breathing tool can lead you through it.',
         action: 'breathing',
       },
       {
-        title: 'Release muscle tension',
+        title: '(P)aired muscle relaxation',
         text: 'Tense one muscle group as you breathe in. Let it soften completely as you breathe out.',
       },
     ],
@@ -161,7 +161,7 @@ const SKILLS = {
   },
   please: {
     title: 'Lower emotional vulnerability', shortTitle: 'PLEASE', subtitle: 'Support the physical basics that make emotion regulation easier.', accent: '#A56759', icon: '+', tag: 'EMOTION REGULATION · PLEASE',
-    steps: [['Treat physical illness', 'Follow appropriate medical care and attend to symptoms rather than ignoring them.'], ['Balance eating', 'Eat regularly and in a way that supports your body.'], ['Avoid mood-altering substances', 'Notice substances that increase vulnerability or impulsivity.'], ['Balance sleep', 'Aim for a consistent amount and schedule that works for you.'], ['Get exercise', 'Choose regular movement appropriate for your health and ability.']],
+    steps: [['Treat (p)hysical illness', 'Follow appropriate medical care and attend to symptoms rather than ignoring them.'], ['Balance (e)ating', 'Eat regularly and in a way that supports your body.'], ['(A)void mood-altering substances', 'Notice substances that increase vulnerability or impulsivity.'], ['Balance (s)leep', 'Aim for a consistent amount and schedule that works for you.'], ['Get (e)xercise', 'Choose regular movement appropriate for your health and ability.']],
     finish: 'This is maintenance, not a demand for perfection. One supportive choice still counts.',
   },
   priorities: {
@@ -186,7 +186,7 @@ const SKILLS = {
   },
   improve: {
     title: 'Improve this moment', shortTitle: 'IMPROVE', subtitle: 'Make a painful moment a little more bearable without needing to fix everything.', accent: '#54776D', icon: '↟', tag: 'DISTRESS TOLERANCE',
-    choices: [['Imagery', 'Picture a safe or peaceful place in sensory detail.'], ['Meaning', 'Connect this moment to a value, purpose, or reason to keep going.'], ['Prayer or reflection', 'Connect with your spiritual practice, values, or a larger perspective.'], ['Relaxation', 'Soften your face, lower your shoulders, or use paced breathing.'], ['One thing now', 'Bring attention back to only the task or minute in front of you.'], ['Vacation', 'Take a brief, safe mental or physical break.'], ['Encouragement', 'Speak to yourself as you would to someone you deeply care about.']].map(([title, text]) => ({ title, text })),
+    choices: [['(I)magery', 'Picture a safe or peaceful place in sensory detail.'], ['(M)eaning', 'Connect this moment to a value, purpose, or reason to keep going.'], ['(P)rayer or reflection', 'Connect with your spiritual practice, values, or a larger perspective.'], ['(R)elaxation', 'Soften your face, lower your shoulders, or use paced breathing.'], ['(O)ne thing now', 'Bring attention back to only the task or minute in front of you.'], ['(V)acation', 'Take a brief, safe mental or physical break.'], ['(E)ncouragement', 'Speak to yourself as you would to someone you deeply care about.']].map(([title, text]) => ({ title, text })),
     finish: 'The aim is not to pretend things are fine. It is to reduce suffering enough to get through this moment.',
   },
   prosCons: {
@@ -280,7 +280,6 @@ function ToolScreen({ tool, navigate, goHome, backLabel = 'Home' }) {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.screenContent} showsVerticalScrollIndicator={false}>
         <BackButton onPress={goHome} label={backLabel} />
-        <View style={[styles.pageIcon, { backgroundColor: `${tool.accent}18` }]}><Text style={[styles.pageIconText, { color: tool.accent }]}>{tool.icon}</Text></View>
         <Text style={[styles.toolTag, { color: tool.accent }]}>{tool.tag}</Text>
         <Text style={styles.pageTitle}>{tool.title}</Text><Text style={styles.pageIntro}>{tool.subtitle}</Text>
 
@@ -315,8 +314,6 @@ function ModuleScreen({ module, navigate, goHome }) {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.screenContent} showsVerticalScrollIndicator={false}>
         <BackButton onPress={goHome} label="Modules" />
-        <View style={[styles.pageIcon, { backgroundColor: `${module.accent}18` }]}><Text style={[styles.pageIconText, { color: module.accent }]}>{module.icon}</Text></View>
-        <Text style={[styles.toolTag, { color: module.accent }]}>DBT MODULE</Text>
         <Text style={styles.pageTitle}>{module.title}</Text><Text style={styles.pageIntro}>{module.description}</Text>
         <View style={styles.moduleSkillList}>
           {module.skills.map((skillId, index) => {

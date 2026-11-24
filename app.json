@@ -30,6 +30,12 @@
           "backgroundColor": "#F6F3EC"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "c32c638d-f643-4c9b-be0d-b310d48cc32f"
+      }
+    },
+    "owner": "micheletighe"
   }
 }
