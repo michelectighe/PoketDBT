@@ -226,9 +226,9 @@ const EXERCISES = [
 
 function BackButton({ onPress, label = 'Back' }) {
   return (
-    <Pressable accessibilityRole="button" onPress={onPress} hitSlop={12} style={({ pressed }) => [styles.backButton, pressed && styles.pressed]}>
-      <Text style={styles.backArrow}>‹</Text><Text style={styles.backText}>{label}</Text>
-    </Pressable>
+      <Pressable accessibilityRole="button" onPress={onPress} hitSlop={12} style={({ pressed }) => [styles.backButton, pressed && styles.pressed]}>
+        <Text style={styles.backArrow}>‹</Text><Text style={styles.backText}>{label}</Text>
+      </Pressable>
   );
 }
 

@@ -17,7 +17,8 @@
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E9F3EE"
-      }
+      },
+      "package": "com.micheletighe.pocketdbt"
     },
     "plugins": [
       "expo-status-bar",
